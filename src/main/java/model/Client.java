@@ -3,14 +3,58 @@ package model;
 import javax.sound.sampled.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
-    public static void main(String []args){
+    public static void main(String[] args) {
+            Scanner scanner = new Scanner(System.in);
+            int option;
 
+            while (true) {
+                System.out.println("\n--- Menú de Chat ---");
+                System.out.println("1. Crear grupos de chat");
+                System.out.println("2. Enviar un mensaje de texto a un usuario o grupo");
+                System.out.println("3. Enviar una nota de voz a un usuario o grupo");
+                System.out.println("4. Realizar una llamada a un usuario o grupo");
+                System.out.println("6. Salir");
+                System.out.print("Seleccione una opción: ");
+                option = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (option) {
+                    case 1:
+                        System.out.println("Creando grupo de chat...");
+                        // Lógica para crear grupos de chat
+                        break;
+                    case 2:
+                        System.out.print("Ingrese el nombre del usuario o grupo: ");
+                        String destinatarioTexto = scanner.nextLine();
+                        System.out.print("Escriba su mensaje: ");
+                        // Lógica para enviar mensaje de texto
+                        break;
+                    case 3:
+                        System.out.print("Ingrese el nombre del usuario o grupo: ");
+                        String destinatarioAudio = scanner.nextLine();
+                        System.out.println("Grabando nota de voz para " + destinatarioAudio + "...");
+                        // Lógica para enviar nota de voz
+                        break;
+                    case 4:
+                        System.out.print("Ingrese el nombre del usuario o grupo para la llamada: ");
+                        String destinatarioLlamada = scanner.nextLine();
+                        System.out.println("Realizando llamada a " + destinatarioLlamada + "...");
+                        // Lógica para realizar llamada
+                        break;
+                    case 6:
+                        System.out.println("Saliendo del sistema...");
+                        System.exit(0); // Finaliza el programa
+                    default:
+                        System.out.println("Opción no válida, intente de nuevo.");
+                }
+            }
     }
-    public void Audio(){
-        try {
 
+    public static void audio(){
+        try {
             // conexión con el servidor
             Socket socket = new Socket("127.0.0.1", 5000);
 
@@ -41,9 +85,6 @@ public class Client {
                 bos.write(buffer, 0, byteRead);
                 bos.flush();
             }
-
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (LineUnavailableException e) {
@@ -51,7 +92,7 @@ public class Client {
         }
     }
 
-    public static void Message(){
+    public static void message(){
         try {
             // creo la conexión con el servidor
             System.out.println("Conectando al servidor ...");
