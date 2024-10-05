@@ -1,0 +1,43 @@
+/* styles.css */
+#chatbox {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+#messageInput {
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 5;
+    -fx-background-color: #f0f0f0;
+}
+
+#messageInput:focused {
+    -fx-border-color: #007bff;
+}
+
+.button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-border-radius: 5;
+}
+
+.button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.message {
+    -fx-background-color: #f0f0f0; /* Color de fondo */
+    -fx-border-color: #cccccc; /* Color del borde */
+    -fx-border-radius: 5; /* Bordes redondeados */
+    -fx-padding: 10; /* Espaciado interno */
+    -fx-background-insets: 5; /* Espaciado interno del fondo */
+}
+
+.user-message {
+    -fx-background-color: #d1e7dd; /* Color de fondo para el mensaje del usuario */
+}
+
+.bot-message {
+    -fx-background-color: #f8d7da; /* Color de fondo para el mensaje del bot */
+}
