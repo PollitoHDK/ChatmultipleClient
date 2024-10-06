@@ -6,4 +6,6 @@ module com.example.chatapp {
 
     opens com.example.chatapp to javafx.fxml;
     exports com.example.chatapp;
+    exports com.example.chatapp.util;
+    opens com.example.chatapp.util to javafx.fxml;
 }
