@@ -1,31 +1,37 @@
 package com.example.chatapp.model;
 
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
+
 import javax.sound.sampled.*;
 import java.io.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.net.InetAddress;
+
 
 public class Client {
-    public static void main(String[] args) {
-            Scanner scanner = new Scanner(System.in);
+    public static String serverIp= "127.0.0.1";
+    public static Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) throws UnknownHostException {
             int option;
+            System.out.println("Ingrese su nombre de usuario");
+            String userName=scanner.nextLine();
 
             while (true) {
                 System.out.println("\n--- Menú de Chat ---");
-                System.out.println("1. Crear grupos de chat");
-                System.out.println("2. Enviar un mensaje de texto a un usuario o grupo");
-                System.out.println("3. Enviar una nota de voz a un usuario o grupo");
-                System.out.println("4. Realizar una llamada a un usuario o grupo");
-                System.out.println("6. Salir");
+                System.out.println("1. Unirme a un grupo");
+                System.out.println("2. Abrir un chat");
                 System.out.print("Seleccione una opción: ");
                 option = scanner.nextInt();
                 scanner.nextLine();
 
                 switch (option) {
                     case 1:
-                        System.out.println("Creando grupo de chat...");
-                        // Lógica para crear grupos de chat
-                        break;
+                        int port=5000;
+                        System.out.println("A que grupo se quiere unir:/n1.Grupo 1 /n2. Grupo 2 /n3. Grupo 3 /n4. Grupo 4 /n5. Grupo 5");
+                        int groupPort=scanner.nextInt();
+                        joinGroup(userName,port+groupPort);
                     case 2:
                         System.out.print("Ingrese el nombre del usuario o grupo: ");
                         String destinatarioTexto = scanner.nextLine();
@@ -53,10 +59,21 @@ public class Client {
             }
     }
 
+    public static void joinGroup(String user, int port){
+        System.out.println("Que desea hacer: /n1. Mandar mensaje /n2. Mandar audio");
+        String option=scanner.nextLine();
+        if(option.equals("1")){
+            message();
+        }else{
+            audio();
+        }
+
+    }
+
     public static void audio(){
         try {
             // conexión con el servidor
-            Socket socket = new Socket("127.0.0.1", 5000);
+            Socket socket = new Socket(serverIp, 5000);
 
             // Definir el formato de audio
             AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
@@ -96,7 +113,7 @@ public class Client {
         try {
             // creo la conexión con el servidor
             System.out.println("Conectando al servidor ...");
-            Socket socket = new Socket("127.0.0.1", 5000);
+            Socket socket = new Socket(serverIp, 5000);
             System.out.println("Servidor conectado");
 
             // entrade de información (consola)
