@@ -147,14 +147,30 @@ public class ClientHandler implements Runnable {
     }
 
     private void sendAudioMessage(String receiver, String audioPath) {
-        // Similar a sendTextMessage, pero manejar archivos de audio
-        // Para simplificar, asumiremos que el cliente envía la ruta del archivo en el servidor
-        // En una implementación real, deberías manejar la transferencia de archivos
-
         User targetUser = server.getUserByUsername(receiver);
         if (targetUser != null) {
             // Enviar notificación de audio
             targetUser.getOut().println("Nota de voz de " + user.getUsername() + ": " + audioPath);
+
+            // Enviar el archivo de audio a través del socket
+            try (FileInputStream fis = new FileInputStream(audioPath);
+                 DataOutputStream dos = new DataOutputStream(targetUser.getSocket().getOutputStream())) {
+                // Enviar el tamaño del archivo primero
+                long fileLength = new File(audioPath).length();
+                dos.writeLong(fileLength);
+
+                // Leer el archivo en bloques y enviarlo
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    dos.write(buffer, 0, bytesRead);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                out.println("Error al enviar la nota de voz a " + receiver);
+                return;
+            }
+
             out.println("Nota de voz enviada a " + receiver);
             // Guardar en historial
             Message msg = new Message(user.getUsername(), receiver, audioPath, Message.MessageType.AUDIO);
@@ -163,14 +179,12 @@ public class ClientHandler implements Runnable {
             // Verificar si es un grupo
             Group group = server.findGroupByName(receiver);
             if (group != null) {
-                // Enviar mensaje al grupo
                 for (User member : group.getMembers()) {
                     if (!member.getUsername().equals(user.getUsername())) {
                         member.getOut().println("Nota de voz de " + user.getUsername() + " al grupo " + group.getGroupName() + ": " + audioPath);
                     }
                 }
                 out.println("Nota de voz enviada al grupo " + group.getGroupName());
-                // Guardar en historial
                 Message msg = new Message(user.getUsername(), group.getGroupName(), audioPath, Message.MessageType.AUDIO);
                 server.getHistoryManager().saveMessage(msg);
             } else {
@@ -178,6 +192,7 @@ public class ClientHandler implements Runnable {
             }
         }
     }
+
 
     private void initiateCall(String receiver) {
         // Para simplificar, solo notificaremos al receptor sobre la llamada

@@ -3,6 +3,7 @@ package com.example.chatapp.client;
 import javax.sound.sampled.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Client {
@@ -148,9 +149,30 @@ public class Client {
         System.out.println("Grabando nota de voz... Presione ENTER para detener.");
         String audioFilePath = "audio_" + System.currentTimeMillis() + ".wav";
         recordAudio(audioFilePath);
-        out.println("SEND_AUDIO " + receiver + " " + audioFilePath);
-        System.out.println("Nota de voz enviada.");
+
+        try {
+            // Leer el archivo de audio y enviar su contenido
+            File audioFile = new File(audioFilePath);
+            FileInputStream fis = new FileInputStream(audioFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            // Enviar el encabezado con el nombre del destinatario y el tamaño del archivo
+            out.println("SEND_AUDIO " + receiver + " " + audioFile.getName() + " " + audioFile.length());
+
+            // Enviar los bytes del archivo
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                // Asegúrate de que 'out' pueda enviar bytes (podría ser un PrintWriter o similar)
+                out.write(Arrays.toString(buffer), 0, bytesRead);  // Este es un método que podría variar según tu implementación de socket
+            }
+
+            fis.close();
+            System.out.println("Nota de voz enviada.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private void recordAudio(String filePath) {
         try {
