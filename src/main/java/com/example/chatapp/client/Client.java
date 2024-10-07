@@ -61,9 +61,8 @@ public class Client {
             System.out.println("1. Crear grupo");
             System.out.println("2. Unirse a un grupo");
             System.out.println("3. Iniciar chat");
-            System.out.println("6. Ver historial");
             System.out.println("9. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opción: \n");
             int option = Integer.parseInt(scanner.nextLine());
 
             switch (option) {
@@ -74,9 +73,6 @@ public class Client {
                     joinGroup();
                     break;
                 case 3:
-                    sendTextMessage();
-                    break;
-                case 4:
                     chatMenu();
                     break;
                 case 9:
@@ -96,8 +92,9 @@ public class Client {
             System.out.println("1. Enviar mensaje de texto");
             System.out.println("2. Enviar nota de voz");
             System.out.println("3. Realizar llamada");
+            System.out.println("4. Ver historial");
             System.out.println("9. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opción: \n");
             option = Integer.parseInt(scanner.nextLine());
 
             switch (option) {
@@ -110,7 +107,7 @@ public class Client {
                 case 3:
                     makeCall();
                     break;
-                case 6:
+                case 4:
                     viewHistory();
                     break;
                 case 9:
@@ -216,26 +213,25 @@ public class Client {
             try {
                 while ((serverMessage = in.readLine()) != null) {
                     if (serverMessage.startsWith("Nota de voz de")) {
-                        // Extraer la ruta del archivo de audio
                         String[] parts = serverMessage.split(": ");
                         if (parts.length == 2) {
                             String audioPath = parts[1];
                             System.out.println(serverMessage);
-                            System.out.print("¿Desea reproducir la nota de voz? (s/n): ");
-                            String choice = scanner.nextLine();
-                            if (choice.equalsIgnoreCase("s")) {
-                                playAudio(audioPath);
-                            }
+                            playAudio(audioPath);
+
                         }
                     } else if (serverMessage.startsWith("Llamada entrante")) {
                         System.out.println(serverMessage);
                         System.out.print("¿Desea responder la llamada? (s/n): ");
-                        String choice = scanner.nextLine();
-                        if (choice.equalsIgnoreCase("s")) {
-                            System.out.println("Llamada respondida.");
-                            // Aquí podrías implementar la lógica de la llamada
+                        if (scanner.hasNextLine()) {
+                            String choice = scanner.nextLine();
+                            if (choice.equalsIgnoreCase("s")) {
+                                System.out.println("Llamada respondida.");
+                            } else {
+                                System.out.println("Llamada rechazada.");
+                            }
                         } else {
-                            System.out.println("Llamada rechazada.");
+                            System.out.println("No se recibió una respuesta.");
                         }
                     } else {
                         System.out.println(serverMessage);
